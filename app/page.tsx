@@ -1,103 +1,165 @@
-import Image from "next/image";
+'use client';
+
+import { useState, useRef, useEffect } from 'react';
 
 export default function Home() {
-  return (
-    <div className="grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20 font-[family-name:var(--font-geist-sans)]">
-      <main className="flex flex-col gap-[32px] row-start-2 items-center sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={180}
-          height={38}
-          priority
-        />
-        <ol className="list-inside list-decimal text-sm/6 text-center sm:text-left font-[family-name:var(--font-geist-mono)]">
-          <li className="mb-2 tracking-[-.01em]">
-            Get started by editing{" "}
-            <code className="bg-black/[.05] dark:bg-white/[.06] px-1 py-0.5 rounded font-[family-name:var(--font-geist-mono)] font-semibold">
-              app/page.tsx
-            </code>
-            .
-          </li>
-          <li className="tracking-[-.01em]">
-            Save and see your changes instantly.
-          </li>
-        </ol>
+  const [messages, setMessages] = useState([]);
+  const [input, setInput] = useState('');
+  const [isLoading, setIsLoading] = useState(false);
+  const messagesEndRef = useRef(null);
+  const inputRef = useRef(null);
 
-        <div className="flex gap-4 items-center flex-col sm:flex-row">
-          <a
-            className="rounded-full border border-solid border-transparent transition-colors flex items-center justify-center bg-foreground text-background gap-2 hover:bg-[#383838] dark:hover:bg-[#ccc] font-medium text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 sm:w-auto"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={20}
-              height={20}
-            />
-            Deploy now
-          </a>
-          <a
-            className="rounded-full border border-solid border-black/[.08] dark:border-white/[.145] transition-colors flex items-center justify-center hover:bg-[#f2f2f2] dark:hover:bg-[#1a1a1a] hover:border-transparent font-medium text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 w-full sm:w-auto md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Read our docs
-          </a>
+  const noMessages = messages.length === 0;
+
+  useEffect(() => {
+    messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
+  }, [messages]);
+
+  useEffect(() => {
+    inputRef.current?.focus();
+  }, []);
+
+  const handleInputChange = (e) => {
+    setInput(e.target.value);
+  };
+
+  // Updated handleSubmit function for your frontend
+const handleSubmit = async (e) => {
+  e.preventDefault();
+
+  if (!input.trim()) return;
+
+  const userMessage = { id: Date.now(), role: 'user', content: input };
+  setMessages(prev => [...prev, userMessage]);
+  setInput('');
+  setIsLoading(true);
+
+  try {
+    const res = await fetch('/api/chat', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        messages: [...messages.map(m => ({ role: m.role, content: m.content })), 
+                  { role: 'user', content: input }]
+      }),
+    });
+
+    if (!res.ok) throw new Error('Network response failed');
+
+    // Add the assistant message with empty content first
+    const assistantMessageId = Date.now() + 1;
+    setMessages(prev => [...prev, { id: assistantMessageId, role: 'assistant', content: '' }]);
+    
+    const reader = res.body.getReader();
+    const decoder = new TextDecoder();
+    let accumulatedText = '';
+
+    while (true) {
+      const { done, value } = await reader.read();
+      if (done) break;
+      
+      const chunk = decoder.decode(value);
+      // Parse the AI SDK format
+      const textChunks = chunk.split('\n').filter(Boolean).map(line => {
+        // Extract just the text portion after the number and colon
+        const match = line.match(/^\d+:"(.+?)"/);
+        if (match && match[1]) {
+          return match[1];
+        }
+        return '';
+      }).join('');
+      
+      accumulatedText += textChunks;
+      
+      // Update the assistant message with accumulated text
+      setMessages(prev => 
+        prev.map(msg => 
+          msg.id === assistantMessageId 
+            ? { ...msg, content: accumulatedText } 
+            : msg
+        )
+      );
+    }
+  } catch (err) {
+    console.error('Error:', err);
+    setMessages(prev => [...prev, {
+      id: Date.now() + 2,
+      role: 'assistant',
+      content: 'Sorry, I had trouble generating a response. Please try again.'
+    }]);
+  } finally {
+    setIsLoading(false);
+    inputRef.current?.focus();
+  }
+};
+
+  const useSuggestion = (text) => {
+    setInput(text);
+    inputRef.current?.focus();
+  };
+
+  return (
+    <div className="min-h-screen flex flex-col font-sans">
+      <main className="flex-1 container max-w-5xl mx-auto px-4 py-6 flex flex-col overflow-hidden">
+        <div className="flex-1 overflow-y-auto mb-6 space-y-6 pr-1 scroll-smooth">
+          {noMessages ? (
+            <div className="text-center py-10">
+              <h2 className="text-2xl font-bold mb-4">Welcome to Bidding Bro!</h2>
+              <p className="text-gray-600 mb-6">Ask me anything about the HSG bidding system or Master programs.</p>
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 max-w-lg mx-auto">
+                {[
+                  'How many IS/FPV credits do I need for MBI?',
+                  "Is there a course that demonstrates how to make money from data?",
+                  'Suggest a course about the environment with four credits.',
+                  'Is Arne really the best teacher?'
+                ].map((suggestion) => (
+                  <button key={suggestion} onClick={() => useSuggestion(suggestion)} className="bg-slate-100 dark:bg-slate-700 text-sm p-3 rounded-xl hover:bg-slate-200">
+                    {suggestion}
+                  </button>
+                ))}
+              </div>
+            </div>
+          ) : (
+            messages.map((message) => (
+              <div
+                key={message.id}
+                className={`flex ${message.role === 'user' ? 'justify-end' : 'justify-start'}`}
+              >
+                <div className={`max-w-md px-5 py-3 rounded-2xl shadow ${message.role === 'user' ? 'bg-blue-500 text-white rounded-tr-none' : 'bg-white dark:bg-slate-800 rounded-tl-none'}`}>
+                  <p className="text-sm whitespace-pre-wrap">{message.content}</p>
+                </div>
+              </div>
+            ))
+          )}
+          {isLoading && (
+            <div className="flex items-center space-x-2 text-sm text-gray-400">Typing<span className="animate-pulse">...</span></div>
+          )}
+          <div ref={messagesEndRef} />
         </div>
+
+        <form onSubmit={handleSubmit} className="relative z-10">
+          <div className="relative">
+            <input
+              ref={inputRef}
+              className="w-full bg-white dark:bg-slate-800 border rounded-full pl-5 pr-14 py-4 shadow focus:outline-none"
+              type="text"
+              placeholder="Ask about HSG bidding and courses..."
+              value={input}
+              onChange={handleInputChange}
+              disabled={isLoading}
+            />
+            <button
+              type="submit"
+              disabled={isLoading || !input.trim()}
+              className="absolute right-2 top-1/2 transform -translate-y-1/2 bg-blue-600 text-white px-4 py-2 rounded-full"
+            >
+              Send
+            </button>
+          </div>
+        </form>
       </main>
-      <footer className="row-start-3 flex gap-[24px] flex-wrap items-center justify-center">
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/file.svg"
-            alt="File icon"
-            width={16}
-            height={16}
-          />
-          Learn
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/window.svg"
-            alt="Window icon"
-            width={16}
-            height={16}
-          />
-          Examples
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/globe.svg"
-            alt="Globe icon"
-            width={16}
-            height={16}
-          />
-          Go to nextjs.org →
-        </a>
-      </footer>
     </div>
   );
 }
