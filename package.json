@@ -6,7 +6,7 @@
     "dev": "next dev --turbopack",
     "build": "next build",
     "start": "next start",
-    "seed": "ts-node ./scripts/dualPDFloader.ts",
+    "seed": "ts-node ./scripts/betterLoadCSV.ts",
     "lint": "next lint"
   },
   "dependencies": {

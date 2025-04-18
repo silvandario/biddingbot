@@ -73,7 +73,7 @@ QUESTION: ${latestMessage}
 NEVER RETURN IMAGES. IF POSSIBLE, ALWAYS REFER TO THE DOCUMENTS.
 WHEN ASKED ABOUT COURSES:
 - Always mention the program, such as "Master in Business Innovation" if you know
-- Always list ECTS if available
+- List the ECTS. If you don't know, avoid mentioning it.
 - Always mention the categorisation, e.g. Contextual studies if possible.
 - Briefly describe the topic
 - Mention prerequisites if found (else skip)

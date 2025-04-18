@@ -106,7 +106,7 @@ export default function Home() {
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 max-w-lg mx-auto">
                 {[
                   'How many IS/FPV credits do I need for MBI?',
-                  'Is there a course that demonstrates how to make money from data?',
+                  'Tell me about From Data2Dollar',
                   'Suggest a course about the environment with four credits.',
                   'Is Arne really the best teacher?'
                 ].map((suggestion) => (

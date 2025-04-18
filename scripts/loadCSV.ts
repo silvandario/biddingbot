@@ -30,7 +30,7 @@ const loadCSVData = async () => {
     }))
 
   for await (const record of parser) {
-    const { Kategorie, Titel, Frage, Antwort } = record
+    const { Kategorie, Titel, Frage, Datum, Antwort, NameAntwortgeber } = record
 
     if (!Frage || !Antwort) continue
 
@@ -39,6 +39,8 @@ Kategorie: ${Kategorie}
 Titel: ${Titel}
 Frage: ${Frage}
 Antwort: ${Antwort}
+Datum: ${Datum}
+Antwortgeber: ${NameAntwortgeber}
     `.trim()
 
     try {
@@ -55,11 +57,15 @@ Antwort: ${Antwort}
         text: combinedText,
         metadata: {
           kategorie: Kategorie,
-          titel: Titel
+          titel: Titel,
+          frage: Frage,
+          datum: Datum,
+          antwort: Antwort,
+          nameAntwortgeber: NameAntwortgeber
         }
       })
 
-      console.log(`✔ Eingefügt: ${Titel?.slice(0, 60)}...`)
+      console.log(`✔ Eingefügt: ${Titel?.slice(0, 60)}... (${Kategorie}) - ${Datum}) - ${NameAntwortgeber}`)
     } catch (error) {
       console.error("❌ Fehler beim Einfügen:", error)
     }
