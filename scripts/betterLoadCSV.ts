@@ -1,3 +1,4 @@
+// TODO : DONT SKIP TO MANY PRESUMABLY DUPLICATE DOCUMENTS.
 import "dotenv/config";
 import fs from "fs";
 import path from "path";

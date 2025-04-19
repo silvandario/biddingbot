@@ -1,3 +1,4 @@
+// TODO : LOAD PDF DATA WITH METADATA EXTRACTION: ECTS, TITLE, Overview examination/s, Dozierende MUST BE INCLUDED
 import { DataAPIClient } from "@datastax/astra-db-ts";
 import OpenAI from "openai";
 import { RecursiveCharacterTextSplitter } from "langchain/text_splitter";
