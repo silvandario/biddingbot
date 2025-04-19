@@ -125,7 +125,7 @@ const createCollection = async () => {
  */
 const loadSampleData = async () => {
   const collection = await db.collection(NEXT_ASTRA_DB_COLLECTION);
-  const basePath = "/Users/silvandarioprivat/Desktop/courses";
+  const basePath = "/Users/silvandarioprivat/Desktop/courses_to_parse/";
   const mastersFolders = ["macfin", "MBI", "MGM", "MiMM"];
   
   for (const program of mastersFolders) {

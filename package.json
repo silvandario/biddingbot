@@ -6,7 +6,7 @@
     "dev": "next dev --turbopack",
     "build": "next build",
     "start": "next start",
-    "seed": "ts-node ./scripts/betterLoadCSV.ts",
+    "seed": "ts-node ./scripts/pdf-metadata-extractor.ts",
     "lint": "next lint"
   },
   "dependencies": {

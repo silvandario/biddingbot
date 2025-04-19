@@ -106,8 +106,8 @@ export default function Home() {
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 max-w-lg mx-auto">
                 {[
                   'How many IS/FPV credits do I need for MBI?',
-                  'Tell me about From Data2Dollar',
-                  'Suggest a course about the environment with four credits.',
+                  'Tell me about From Data2Dollar - Dein Technologiekoffer von der Datenbeschaffung bis zur Visualisierung',
+                  'Give me a suggestion for an FPV. I like data science.',
                   'Is Arne really the best teacher?'
                 ].map((suggestion) => (
                   <button key={suggestion} onClick={() => useSuggestion(suggestion)} className="bg-slate-100 dark:bg-slate-700 text-sm p-3 rounded-xl hover:bg-slate-200">
