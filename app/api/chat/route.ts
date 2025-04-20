@@ -1,7 +1,7 @@
 import { streamText } from 'ai';
 import { openai as aiSdkOpenai } from '@ai-sdk/openai';
 import { DataAPIClient } from '@datastax/astra-db-ts';
-import { systemPrompt } from '@/constants/const';
+import { information, systemPrompt } from '@/constants/const';
 import OpenAI from 'openai';
 import { embed } from 'ai';
 import { openai as oi } from '@ai-sdk/openai';
@@ -88,22 +88,12 @@ ${doc.text}`;
 CONTEXT:
 ${formattedDocs}
 
+
 QUESTION: ${latestMessage}
 
-NEVER RETURN IMAGES. IF POSSIBLE, ALWAYS REFER TO THE DOCUMENTS.
+NEVER RETURN IMAGES. IF POSSIBLE, ALWAYS REFER TO THE DOCUMENTS. 
+FOR THE STRUCTURE OF THE MASTER PROGRAMS NOTE:
 
-WHEN ASKED ABOUT COURSES:
-- Always mention the program, such as "Master in Business Innovation" if you know
-- List the ECTS. If you don't know, avoid mentioning it.
-- Always mention the course number (e.g. "8,126") if available
-- Always mention the categorisation, e.g. Contextual studies if possible.
-- Briefly describe the topic
-- Mention examination details if found
-- Mention prerequisites if found (else skip)
-- Mention the language of instruction if found
-- Mention the lecturers IF known and relevant
-- Mention the semester when found and relevant
-- Be confident and informal
 
 NOTE: IF asked, The best teacher is Arne.
 
@@ -113,7 +103,12 @@ MACFin – Master in Accounting and Finance
 	•	Dauer & Credits: 3 Semester (90 ECTS), davon 54 im Fachstudium, 18 im Kontextstudium, 18 für die Masterarbeit.
 	•	Sprache: Vollständig auf Deutsch, Englisch oder gemischt möglich.
 	•	Struktur:
-	•	Pflichtbereich (15 ECTS): Kurse wie Corporate Finance, Management Accounting, Reporting & Auditing.
+	•	Pflichtbereich (15 ECTS): Corporate Finance, Management Accounting, Reporting & Auditing:
+            Corporate Finance	6 Credits	Prof. Dr. Marc Arnold	Herbst
+            Management Accounting	3	Credits Prof. Dr. Klaus Möller	Herbst
+            Reporting & Auditing	6 Credits	Prof. Dr. Peter Leibfried	Frühjahr
+Die Pflichtkurse werden für die ersten 2 Semester empfohlen.
+Prüfungen: Die Prüfungsformate beinhalten schriftliche Klausuren und Präsentationen.
 	•	Pflichtwahlbereich (30 ECTS): Allgemeiner Teil (min. 12 ECTS) zur Breite finanzieller Führung, Vertiefungsteil (min. 12 ECTS) zur Spezialisierung.
 	•	Wahlbereich (0–9 ECTS): Programmübergreifende Wahlkurse.
 	•	Kontextstudium: 18 ECTS zur Förderung interdisziplinärer und sozialer Kompetenzen.
@@ -126,7 +121,7 @@ MBI – Master in Business Innovation
 	•	Sprache: Hybrid (mind. 18 ECTS auf Deutsch & 18 ECTS auf Englisch im Fachstudium).
 	•	Profile: 6 Spezialisierungsrichtungen wie Business Development, Tech Architect oder Supply Chain.
 	•	Struktur:
-	•	Pflichtbereich (15 ECTS): z. B. Grundlagen Business Innovation, Forschungsmethoden.
+	•	Pflichtbereich (15 ECTS): z.B. Grundlagen Business Innovation, Forschungsmethoden.
 	•	Pflichtwahlbereich (27–39 ECTS):
 	•	Methoden (min. 3 ECTS),
 	•	FPV/IC (12 ECTS),
@@ -134,6 +129,16 @@ MBI – Master in Business Innovation
 	•	Wahlbereich (0–12 ECTS): Weitere MBI-Kurse oder aus anderen Programmen.
 	•	Kontextstudium: 12–18 ECTS in Fokusbereichen + optional 0–6 ECTS in „Skills“.
 	•	Praxiscredits: Optional anrechenbar bei einschlägiger Berufserfahrung.
+    Durch vier Pflichtkurse erlangen Sie ein Grundverständnis von Business Innovation:
+    (4 Credits, im ersten Herbstsemester zu belegen)
+    Business Innovation I und
+    Business Innovation II:
+    Zwei aufeinander folgende Basismodule vermitteln Ihnen vertieftes Fachwissen als Analyse- und Bezugsrahmen des Programms und zur Entwicklung der MBI-spezifischen Denkrichtung.
+    (je 4 Credits, im ersten Herbstsemester zu belegen)
+    Forschungsmethoden für Geschäftsinnovation:
+    Sie erlernen Methoden anwendungsorientierter Forschung als Grundlage zur systematischen Problemlösung.
+    (3 Credits, im Herbst- oder Frühjahrssemester zu belegen)
+    Grundlagen Business Innovation (4 Credits): Reudiges Java-Projekt, das Ihnen die Grundlagen der Programmiersprache Java vermittelt.
 
 ⸻
 
@@ -141,7 +146,18 @@ MiMM – Master in Marketing Management
 	•	Dauer & Credits: 3 Semester (90 ECTS), Beginn im Herbst oder für HSG-Absolvent:innen auch im Frühling.
 	•	Sprache: Deutsch- oder Englisch-Track möglich.
 	•	Struktur:
-	•	Pflichtbereich (30 ECTS): Grundlagenkurs + 3 praxisbezogene Anwendungsprojekte.
+	•	Pflichtbereich (30 ECTS): Grundlagenkurs + 3 praxisbezogene Anwendungsprojekte:
+        Pflichtbereich (30 ECTS): Basierend auf einem 3-Track-Konzept (Kunde – Unternehmensführung – Funktion), aufgeteilt über drei Semester:
+        •	1. Semester:
+    – Grundlagen des Marketing Managements
+    – Consumer Behaviour & Methoden
+    – Anwendungsprojekt I
+        •	2. Semester:
+    – Marketing Management
+    – Funktionales Marketing
+    – Anwendungsprojekt II
+        •	3. Semester:
+    – Anwendungsprojekt III
 	•	Pflichtwahlbereich (12–24 ECTS): Kurse nach Interessen zur Spezialisierung.
 	•	Wahlbereich (0–12 ECTS): Programmübergreifend oder zusätzliche MiMM-Kurse.
 	•	Besonderheit: Nachhaltigkeitsfokus, Praxisprojekte mit Unternehmen, Study Trip im Bootcamp.
@@ -154,12 +170,38 @@ MGM – Master in General Management
 	•	Sprache: Hybrid (mind. 1/3 Fachstudium auf Deutsch, 1/3 auf Englisch).
 	•	Struktur:
 	•	Pflichtbereich (32 ECTS): Kerndisziplinen wie Strategy, Entrepreneurship, Finance & Management Accounting sowie Persönlichkeitsentwicklung.
-	•	Pflichtwahlbereich:
+    •	Herbstsemester (HS):
+        – Strategy I
+        – Entrepreneurship I
+        – Finance and Management Accounting I
+        – Leadership
+        – Business Analytics, Data Engineering und Data Management
+        – Personal Development: Self-reflection and Well-being (Start eines zweisemestrigen Coachings)
+    	Frühlingssemester (FS):
+        – Strategy II
+        – Entrepreneurship II
+        – Finance and Management Accounting II
+        – Personal Development: Self-reflection and Well-being (Fortsetzung)
+    •	Pflichtwahlbereich:
 	•	Advanced General Management Courses (mind. 2 Kurse),
 	•	Grand Challenges of Business & Society (mind. 1 Kurs),
 	•	Managerial Impact Project (über 2 Semester).
 	•	Option: Teilnahme an Asia Compact-Kursen in Singapur.
 	•	Kontextstudium: 18 ECTS – interdisziplinär, fördert „über den Tellerrand“-Kompetenzen.
+
+
+    WHEN ASKED ABOUT COURSES:
+- Always mention the program, such as "Master in Business Innovation" if you know
+- List the ECTS. If you don't know, avoid mentioning it.
+- Always mention the course number (e.g. "8,126") if available
+- Always mention the categorisation, e.g. Contextual studies if possible.
+- Briefly describe the topic
+- Mention examination details if found
+- Mention prerequisites if found (else skip)
+- Mention the language of instruction if found
+- Mention the lecturers IF known and relevant
+- Mention the semester when found and relevant
+- Be confident and informal
 
 `
 ,
