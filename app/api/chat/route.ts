@@ -26,11 +26,18 @@ export async function POST(req: Request) {
     const { messages } = await req.json();
     const latestMessage = messages[messages.length - 1]?.content;
     
-    // Determine if we should fetch full documents or chunks based on the query
+    // Detect language of the query (simple detection)
+    const isGermanQuery = /[äöüÄÖÜß]/.test(latestMessage) || 
+                          /\b(wie|was|wo|wann|warum|wer|welche|welcher|welches)\b/i.test(latestMessage);
+    
+    // Determine the query type based on content
     let queryType = "chunk"; // Default to chunks
     if (latestMessage.toLowerCase().includes("full details") || 
         latestMessage.toLowerCase().includes("complete information") ||
-        latestMessage.toLowerCase().includes("syllabus")) {
+        latestMessage.toLowerCase().includes("syllabus") ||
+        latestMessage.toLowerCase().includes("vollständige details") ||
+        latestMessage.toLowerCase().includes("vollständige informationen") ||
+        latestMessage.toLowerCase().includes("lehrplan")) {
       queryType = "full";
     }
     
@@ -40,20 +47,63 @@ export async function POST(req: Request) {
       value: latestMessage,
     });
     
-    // Step 2: Query AstraDB with vector similarity
+    // Step 2: Set up query filters - look for course info first, then FAQ if needed
+    const courseFilter = { "metadata.type": queryType };
+    const faqFilter = { "metadata.type": "faq" };
+    
+    // First try to query course information
     const collection = await db.collection(NEXT_ASTRA_DB_COLLECTION!);
-    const cursor = collection.find(
-      { "metadata.type": queryType },
+    const courseCursor = collection.find(
+      courseFilter,
       {
         sort: {
           $vector: embedding,
         },
-        limit: 10,
+        limit: 5, // Start with fewer results for courses
       }
     );
     
-    const documents = await cursor.toArray();
+    let courseDocuments = await courseCursor.toArray();
+    
+    // Also query FAQ documents
+    const faqCursor = collection.find(
+      faqFilter,
+      {
+        sort: {
+          $vector: embedding,
+        },
+        limit: 5,
+      }
+    );
+    
+    const faqDocuments = await faqCursor.toArray();
+    
+    // Combine results with a slight preference for FAQ entries if the user is likely asking a question
+    let documents = [];
+    
+    // Determine if this is likely a question
+    const isLikelyQuestion = latestMessage.includes('?') || 
+                             /^(how|what|where|when|why|who|which|can|is|are|do|does)/i.test(latestMessage) ||
+                             /^(wie|was|wo|wann|warum|wer|welche|welcher|welches|kann|ist|sind|hat|haben)/i.test(latestMessage);
+    
+    if (isLikelyQuestion) {
+      // For questions, prioritize FAQ entries but include relevant course info
+      documents = [...faqDocuments, ...courseDocuments];
+    } else {
+      // For other queries, prioritize course information but include relevant FAQs
+      documents = [...courseDocuments, ...faqDocuments];
+    }
+    
+    // Limit to top 10 most relevant results overall
+    documents = documents.slice(0, 10);
+    
     const docsMap = documents?.map((doc, i) => {
+      // Handle FAQ entries
+      if (doc.metadata?.type === "faq") {
+        return doc.text;
+      }
+      
+      // Handle course entries
       const meta = doc.metadata || {};
       const program = meta.program?.toUpperCase() || "Unknown Program";
       const courseNumber = meta.courseNumber || "";
@@ -127,7 +177,7 @@ MBI – Master in Business Innovation
 	•	FPV/IC (12 ECTS),
 	•	Wahlkurse (12–24 ECTS).
 	•	Wahlbereich (0–12 ECTS): Weitere MBI-Kurse oder aus anderen Programmen.
-	•	Kontextstudium: 12–18 ECTS in Fokusbereichen + optional 0–6 ECTS in „Skills“.
+	•	Kontextstudium: 12–18 ECTS in Fokusbereichen + optional 0–6 ECTS in „Skills".
 	•	Praxiscredits: Optional anrechenbar bei einschlägiger Berufserfahrung.
     Durch vier Pflichtkurse erlangen Sie ein Grundverständnis von Business Innovation:
     (4 Credits, im ersten Herbstsemester zu belegen)
@@ -187,7 +237,7 @@ MGM – Master in General Management
 	•	Grand Challenges of Business & Society (mind. 1 Kurs),
 	•	Managerial Impact Project (über 2 Semester).
 	•	Option: Teilnahme an Asia Compact-Kursen in Singapur.
-	•	Kontextstudium: 18 ECTS – interdisziplinär, fördert „über den Tellerrand“-Kompetenzen.
+	•	Kontextstudium: 18 ECTS – interdisziplinär, fördert „über den Tellerrand"-Kompetenzen.
 
 
     WHEN ASKED ABOUT COURSES:
@@ -203,6 +253,16 @@ MGM – Master in General Management
 - Mention the semester when found and relevant
 - Be confident and informal
 
+FOR FAQ QUESTIONS:
+- Be friendly and helpful like a university student assistant would be
+- Answer in the same language as the question (German or English)
+- If the question is about exam registration/deregistration, emphasize important deadlines
+- For SHSG (Student Union) related questions, mention that this information comes from the student representatives
+- If a date is provided in the FAQ, make sure to include it in your answer
+- Be conversational but precise
+- IF AVAILABLE; ALWAYS MENTION THE [Datum] AND THE [NameAntwortgeber] FROM THE CSV and tell the user that this information is related to a similar question from the past that was answered by NameAntwortgeber
+
+${isGermanQuery ? 'WICHTIG: Antworte auf Deutsch, wenn die Frage auf Deutsch gestellt wurde.' : ''}
 `
 ,
     };

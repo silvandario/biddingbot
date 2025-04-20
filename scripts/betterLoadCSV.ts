@@ -1,4 +1,3 @@
-// TODO : DONT SKIP TO MANY PRESUMABLY DUPLICATE DOCUMENTS.
 import "dotenv/config";
 import fs from "fs";
 import path from "path";
@@ -21,12 +20,11 @@ const client = new DataAPIClient(NEXT_ASTRA_DB_APPLICATION_TOKEN);
 const db = client.db(NEXT_ASTRA_DB_API_ENDPOINT, { keyspace: NEXT_ASTRA_DB_NAMESPACE });
 
 // Path to CSV file
-const csvFilePath = path.resolve(__dirname, "../data/faq.csv");
+const csvFilePath = path.resolve(__dirname, "../data/faq_clean.csv");
 
 // Track statistics
 let successCount = 0;
 let errorCount = 0;
-let duplicateCount = 0;
 
 // Function to clean and normalize text
 const cleanText = (text) => {
@@ -36,19 +34,45 @@ const cleanText = (text) => {
     .replace(/\n\s*\n/g, '\n'); // Replace multiple newlines with a single newline
 };
 
-// Function to create additional search text for better embedding
+// Enhanced function to create enriched text for better embedding
 const createSearchableText = (record) => {
   const { Kategorie, Titel, Frage, Antwort } = record;
   
-  // Create variations of the question to improve semantic search
-  const questionVariations = [
-    Frage,
-    // Create variations without question marks
-    Frage.replace(/\?/g, ''),
-    // Turn questions into statements
-    Frage.replace(/^(Wie|Was|Wo|Wann|Warum|Wer|Welche|Welcher|Welches|Kann|Ist|Sind|Hat|Haben|Darf|Müssen|Soll|Können)/i, '')
-      .replace(/\?/g, '.')
-  ].filter(Boolean);
+  // Create different variations of the question to improve semantic search
+  const questionVariations = [];
+  
+  // Original question
+  if (Frage) questionVariations.push(Frage);
+  
+  // Question without question marks
+  if (Frage) questionVariations.push(Frage.replace(/\?/g, ''));
+  
+  // Keywords from question (remove common words)
+  if (Frage) {
+    const keywords = Frage
+      .replace(/\?/g, '')
+      .replace(/(\b(wie|was|wo|wann|warum|wer|welche|welcher|welches|kann|ist|sind|hat|haben|darf|müssen|soll|können|ich|du|er|sie|es|wir|ihr|sie|the|a|an|in|for|to|is|are|can|do|does|with|about|my|your|their)\b)/gi, '')
+      .trim();
+    questionVariations.push(keywords);
+  }
+  
+  // Add language variations if the question is in English or German
+  const isEnglish = /[a-zA-Z]/.test(Frage) && !/[äöüÄÖÜß]/.test(Frage);
+  if (isEnglish) {
+    // Add common German translations of query terms
+    if (Frage.includes('exam')) questionVariations.push('Prüfung Examen');
+    if (Frage.includes('course')) questionVariations.push('Kurs Vorlesung');
+    if (Frage.includes('register')) questionVariations.push('anmelden registrieren');
+    if (Frage.includes('deregister')) questionVariations.push('abmelden');
+    if (Frage.includes('deadline')) questionVariations.push('Frist Deadline');
+  } else {
+    // Add common English translations of query terms
+    if (Frage.includes('Prüfung')) questionVariations.push('exam examination');
+    if (Frage.includes('Kurs') || Frage.includes('Vorlesung')) questionVariations.push('course lecture');
+    if (Frage.includes('anmeld')) questionVariations.push('register registration');
+    if (Frage.includes('abmeld')) questionVariations.push('deregister deregistration');
+    if (Frage.includes('Frist')) questionVariations.push('deadline');
+  }
   
   // Combine all text for enriched embedding
   return `
@@ -57,13 +81,8 @@ const createSearchableText = (record) => {
     FRAGE: ${Frage || ''}
     FRAGE VARIATIONEN: ${questionVariations.join(' | ')}
     ANTWORT: ${Antwort || ''}
-    SUCHBEGRIFFE: ${[Kategorie, Titel, Frage].filter(Boolean).join(' ')}
+    SUCHBEGRIFFE: ${[Kategorie, Titel, ...questionVariations].filter(Boolean).join(' ')}
   `.trim();
-};
-
-// Function to calculate chunk ID for deduplication
-const calculateChunkId = (text) => {
-  return Buffer.from(text.substring(0, 100)).toString('base64');
 };
 
 // Main data loading function
@@ -77,9 +96,8 @@ const loadCSVData = async () => {
   const batchSize = 5;
   let batch = [];
   let processedCount = 0;
-  const processedIds = new Set();
   
-  console.log("🚀 Starting CSV processing...");
+  console.log("🚀 Starting FAQ CSV processing...");
   
   const parser = fs
     .createReadStream(csvFilePath)
@@ -101,15 +119,6 @@ const loadCSVData = async () => {
     // Clean text fields
     const cleanedQuestion = cleanText(Frage);
     const cleanedAnswer = cleanText(Antwort);
-    
-    // Create unique ID to avoid duplicates
-    const chunkId = calculateChunkId(cleanedQuestion + cleanedAnswer);
-    if (processedIds.has(chunkId)) {
-      console.log(`🔄 Skipping duplicate: ${Titel?.slice(0, 40)}...`);
-      duplicateCount++;
-      continue;
-    }
-    processedIds.add(chunkId);
     
     // Create display text for storage
     const displayText = `
@@ -136,7 +145,8 @@ ANTWORTGEBER: ${NameAntwortgeber || 'Unbekannt'}
         datum: Datum || '',
         antwort: cleanedAnswer,
         nameAntwortgeber: NameAntwortgeber || '',
-        chunkId: chunkId
+        // Add languageHint for better search matching
+        languageHint: /[äöüÄÖÜß]/.test(cleanedQuestion) ? 'de' : 'en'
       }
     });
     
@@ -144,7 +154,7 @@ ANTWORTGEBER: ${NameAntwortgeber || 'Unbekannt'}
     if (batch.length >= batchSize) {
       await processBatch(batch, collection);
       processedCount += batch.length;
-      console.log(`📊 Progress: ${processedCount} records processed (${successCount} successful, ${errorCount} failed, ${duplicateCount} duplicates)`);
+      console.log(`📊 Progress: ${processedCount} records processed (${successCount} successful, ${errorCount} failed)`);
       batch = [];
     }
   }
@@ -159,7 +169,6 @@ ANTWORTGEBER: ${NameAntwortgeber || 'Unbekannt'}
   console.log(`   - Total processed: ${processedCount}`);
   console.log(`   - Successfully inserted: ${successCount}`);
   console.log(`   - Failed: ${errorCount}`);
-  console.log(`   - Duplicates skipped: ${duplicateCount}`);
 };
 
 // Function to ensure collection exists
@@ -222,31 +231,13 @@ async function processBatch(batch, collection) {
   // Insert documents with their embeddings
   for (const {vector, item} of validEmbeddings) {
     try {
-      // Check if document with same chunkId already exists
-      const existing = await collection.findOne({ "metadata.chunkId": item.metadata.chunkId });
-      
-      if (existing) {
-        // Update existing document
-        await collection.updateOne(
-          { _id: existing._id },
-          {
-            $set: {
-              $vector: vector,
-              text: item.text,
-              metadata: item.metadata
-            }
-          }
-        );
-        console.log(`🔄 Updated: ${item.metadata.titel?.slice(0, 40)}... (${item.metadata.kategorie})`);
-      } else {
-        // Insert new document
-        await collection.insertOne({
-          $vector: vector,
-          text: item.text,
-          metadata: item.metadata
-        });
-        console.log(`✔️ Inserted: ${item.metadata.titel?.slice(0, 40)}... (${item.metadata.kategorie})`);
-      }
+      // Insert the FAQ entry with its vector embedding
+      await collection.insertOne({
+        $vector: vector,
+        text: item.text,
+        metadata: item.metadata
+      });
+      console.log(`✔️ Inserted: ${item.metadata.titel?.slice(0, 40)}... (${item.metadata.kategorie})`);
       successCount++;
     } catch (error) {
       console.error(`❌ Database error for "${item.metadata.titel?.slice(0, 40)}...": ${error.message}`);
