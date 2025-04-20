@@ -107,16 +107,62 @@ WHEN ASKED ABOUT COURSES:
 
 NOTE: IF asked, The best teacher is Arne.
 
-FACTS ABOUT THE MASTER IN BUSINESS INNOVATION:
-Mindestens 16 Credits müssen aus einem vordefinierten Angebot an Leistungen
-erfolgreich absolviert werden. Eine Einschränkung, aus welchem Gefäss diese
-kommen gibt es hierbei nicht. Der Schwerpunkt setzt sich nach Belieben aus
-Methoden, FPV/IC und Pflichtwahlkursen zusammen.
-Grenzen laut Studienplan:
-- 3–15 Credits Methoden
-- genau 12 Credits FPV/IC
-- 12–24 Credits Pflichtwahlkurs
-- 18 Credits Masterarbeit.`,
+🎓 Masterprogramme an der Universität St.Gallen (HSG) – System Prompt Übersicht
+
+MACFin – Master in Accounting and Finance
+	•	Dauer & Credits: 3 Semester (90 ECTS), davon 54 im Fachstudium, 18 im Kontextstudium, 18 für die Masterarbeit.
+	•	Sprache: Vollständig auf Deutsch, Englisch oder gemischt möglich.
+	•	Struktur:
+	•	Pflichtbereich (15 ECTS): Kurse wie Corporate Finance, Management Accounting, Reporting & Auditing.
+	•	Pflichtwahlbereich (30 ECTS): Allgemeiner Teil (min. 12 ECTS) zur Breite finanzieller Führung, Vertiefungsteil (min. 12 ECTS) zur Spezialisierung.
+	•	Wahlbereich (0–9 ECTS): Programmübergreifende Wahlkurse.
+	•	Kontextstudium: 18 ECTS zur Förderung interdisziplinärer und sozialer Kompetenzen.
+	•	Besonderheit: Vorleistungen anrechenbar für Wirtschaftsprüfer:innen-Ausbildung.
+
+⸻
+
+MBI – Master in Business Innovation
+	•	Dauer & Credits: 3–4 Semester, 90 ECTS (54 Fachstudium, 18 Kontextstudium, 18 Masterarbeit).
+	•	Sprache: Hybrid (mind. 18 ECTS auf Deutsch & 18 ECTS auf Englisch im Fachstudium).
+	•	Profile: 6 Spezialisierungsrichtungen wie Business Development, Tech Architect oder Supply Chain.
+	•	Struktur:
+	•	Pflichtbereich (15 ECTS): z. B. Grundlagen Business Innovation, Forschungsmethoden.
+	•	Pflichtwahlbereich (27–39 ECTS):
+	•	Methoden (min. 3 ECTS),
+	•	FPV/IC (12 ECTS),
+	•	Wahlkurse (12–24 ECTS).
+	•	Wahlbereich (0–12 ECTS): Weitere MBI-Kurse oder aus anderen Programmen.
+	•	Kontextstudium: 12–18 ECTS in Fokusbereichen + optional 0–6 ECTS in „Skills“.
+	•	Praxiscredits: Optional anrechenbar bei einschlägiger Berufserfahrung.
+
+⸻
+
+MiMM – Master in Marketing Management
+	•	Dauer & Credits: 3 Semester (90 ECTS), Beginn im Herbst oder für HSG-Absolvent:innen auch im Frühling.
+	•	Sprache: Deutsch- oder Englisch-Track möglich.
+	•	Struktur:
+	•	Pflichtbereich (30 ECTS): Grundlagenkurs + 3 praxisbezogene Anwendungsprojekte.
+	•	Pflichtwahlbereich (12–24 ECTS): Kurse nach Interessen zur Spezialisierung.
+	•	Wahlbereich (0–12 ECTS): Programmübergreifend oder zusätzliche MiMM-Kurse.
+	•	Besonderheit: Nachhaltigkeitsfokus, Praxisprojekte mit Unternehmen, Study Trip im Bootcamp.
+	•	Kontextstudium: 18 ECTS mit interdisziplinärer Vertiefung, auch Praxiscredits möglich.
+
+⸻
+
+MGM – Master in General Management
+	•	Dauer & Credits: 3 Semester, 90 ECTS (54 Fachstudium, 18 Kontext, 18 Masterarbeit).
+	•	Sprache: Hybrid (mind. 1/3 Fachstudium auf Deutsch, 1/3 auf Englisch).
+	•	Struktur:
+	•	Pflichtbereich (32 ECTS): Kerndisziplinen wie Strategy, Entrepreneurship, Finance & Management Accounting sowie Persönlichkeitsentwicklung.
+	•	Pflichtwahlbereich:
+	•	Advanced General Management Courses (mind. 2 Kurse),
+	•	Grand Challenges of Business & Society (mind. 1 Kurs),
+	•	Managerial Impact Project (über 2 Semester).
+	•	Option: Teilnahme an Asia Compact-Kursen in Singapur.
+	•	Kontextstudium: 18 ECTS – interdisziplinär, fördert „über den Tellerrand“-Kompetenzen.
+
+`
+,
     };
     
     // Step 4: Stream response from OpenAI
