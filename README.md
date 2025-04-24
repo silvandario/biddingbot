@@ -62,7 +62,7 @@ Continuous improvement in accuracy and context relevance through advanced metada
 
 To get started with the chatbot and data setup:
 
-git clone [[<your-repo-link>](https://github.com/silvandario/biddingbot)](https://github.com/silvandario/biddingbot)
+git clone (https://github.com/silvandario/biddingbot)
 cd biddingbot
 npm install
 npm run seed # Initializes and vectorizes course data, select in package.json scripts -> seeds -> the desired file to use
