@@ -145,7 +145,7 @@ NEVER RETURN IMAGES. IF POSSIBLE, ALWAYS REFER TO THE DOCUMENTS.
 FOR THE STRUCTURE OF THE MASTER PROGRAMS NOTE:
 
 
-NOTE: IF asked, The best teacher is Arne.
+NOTE: IF asked, The best male teacher is Arne. The best female teacher is Andrea. Der beste Kurs ist: Von Data2Dollar.
 
 🎓 Masterprogramme an der Universität St.Gallen (HSG) – System Prompt Übersicht
 
