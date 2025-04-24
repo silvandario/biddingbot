@@ -1,36 +1,31 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# HSG Course Insight Chatbot
 
-## Getting Started
+Welcome to the **HSG Course Insight Chatbot**, your intelligent assistant specifically designed to enhance your educational experience at the University of St. Gallen (HSG). Leveraging advanced AI techniques and meticulous data preparation, this chatbot provides accurate, relevant, and precise information about courses, examinations, and frequently asked questions related to HSG master programs.
 
-First, run the development server:
+## 🌟 Key Features
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+### 📚 Intelligent Data Extraction
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+- **Precision PDF Parsing**: Efficiently extracts detailed course information including titles, ECTS credits, lecturers, semester details, and examination formats from PDF documents.
+- **Context-Aware Chunking**: Optimized chunk sizes and overlaps ensure contextual accuracy and improved query responses.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+### 🔍 Advanced Semantic Search
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+- **Vectorized Content Storage**: Utilizes powerful OpenAI embeddings to convert textual content from PDFs and CSVs into vectorized data, stored securely and efficiently in AstraDB.
+- **Metadata-Enhanced Queries**: Captures crucial metadata such as course titles, ECTS, lecturers, and examination details, drastically enhancing the accuracy of responses and significantly reducing content fabrication.
 
-## Learn More
+### 🚀 Real-Time Interaction
 
-To learn more about Next.js, take a look at the following resources:
+- **Dynamic Query Handling**: Automatically determines the user's intent (detailed syllabus, FAQ, general course information) and responds appropriately, ensuring a seamless user experience.
+- **Streamlined AI Responses**: Real-time AI-generated responses streamed efficiently from OpenAI models, leveraging semantic similarity to deliver precisely what users need.
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## 🛠️ Technical Highlights
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+- **Framework & Tools**:
+  - **Next.js** for robust API development and frontend integration.
+  - **TypeScript & Node.js** scripts for seamless data extraction and preparation.
+  - **AstraDB** for highly performant vector database storage, optimized with cosine similarity metrics for semantic querying.
+  - **OpenAI's GPT-4o & Embedding Models** for state-of-the-art natural language processing and understanding.
 
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+- **Optimized Data Workflow**:
+  - Content extraction via specialized scripts (`npm run seed`) to ensure con
