@@ -32,7 +32,8 @@ Welcome to the **HSG Course Insight Chatbot**, your intelligent assistant specif
 
 Advanced chunk management for enhanced query precision and minimized information loss.
 
-🎓 Supported Master Programs
+
+🎓 **Supported Master Programs**
 
 The chatbot currently covers detailed insights for the following HSG master programs:
 
@@ -44,7 +45,8 @@ MiMM – Master in Marketing Management
 
 MGM – Master in General Management
 
-💡 Usage Scenarios
+
+💡 **Usage Scenarios**
 
 Students looking for detailed course information, exam structures, or quick answers to FAQs.
 
@@ -52,23 +54,30 @@ Faculty & Administration needing accurate, timely data retrieval about course of
 
 Prospective Students exploring program details, structure, and insights.
 
-🚧 Upcoming Enhancements
+
+🚧 **Upcoming Enhancements**
 
 Expanded support for additional data sources and formats.
 
 Continuous improvement in accuracy and context relevance through advanced metadata handling and AI model tuning.
 
-📥 Installation & Execution
+
+📥 **Installation & Execution**
 
 To get started with the chatbot and data setup:
 
-git clone (https://github.com/silvandario/biddingbot)
+git clone https://github.com/silvandario/biddingbot
+
 cd biddingbot
+
 npm install
+
 npm run seed # Initializes and vectorizes course data, select in package.json scripts -> seeds -> the desired file to use
+
 npm run dev # Launches chatbot API and frontend interface
 
-🌐 Contribute & Feedback
+
+🌐 **Contribute & Feedback**
 
 Your insights and feedback are valuable for continuous improvement. Contributions to further refine and enhance the chatbot's capabilities are warmly welcomed!
 
