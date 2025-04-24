@@ -28,4 +28,48 @@ Welcome to the **HSG Course Insight Chatbot**, your intelligent assistant specif
   - **OpenAI's GPT-4o & Embedding Models** for state-of-the-art natural language processing and understanding.
 
 - **Optimized Data Workflow**:
-  - Content extraction via specialized scripts (`npm run seed`) to ensure con
+  - Content extraction via specialized scripts (`npm run seed`) to ensure continuous data accuracy and reliability.
+
+Advanced chunk management for enhanced query precision and minimized information loss.
+
+🎓 Supported Master Programs
+
+The chatbot currently covers detailed insights for the following HSG master programs:
+
+MACFin – Master in Accounting and Finance
+
+MBI – Master in Business Innovation
+
+MiMM – Master in Marketing Management
+
+MGM – Master in General Management
+
+💡 Usage Scenarios
+
+Students looking for detailed course information, exam structures, or quick answers to FAQs.
+
+Faculty & Administration needing accurate, timely data retrieval about course offerings and curricular details.
+
+Prospective Students exploring program details, structure, and insights.
+
+🚧 Upcoming Enhancements
+
+Expanded support for additional data sources and formats.
+
+Continuous improvement in accuracy and context relevance through advanced metadata handling and AI model tuning.
+
+📥 Installation & Execution
+
+To get started with the chatbot and data setup:
+
+git clone <your-repo-link>
+cd your-chatbot-directory
+npm install
+npm run seed # Initializes and vectorizes course data
+npm run dev # Launches chatbot API and frontend interface
+
+🌐 Contribute & Feedback
+
+Your insights and feedback are valuable for continuous improvement. Contributions to further refine and enhance the chatbot's capabilities are warmly welcomed!
+
+Enjoy exploring courses at HSG with advanced AI-driven insights!
