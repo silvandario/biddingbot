@@ -1,6 +1,7 @@
 # HSG Course Insight Chatbot
 
 Welcome to the **HSG Course Insight Chatbot**, your intelligent assistant specifically designed to enhance your educational experience at the University of St. Gallen (HSG). Leveraging advanced AI techniques and meticulous data preparation, this chatbot provides accurate, relevant, and precise information about courses, examinations, and frequently asked questions related to HSG programs.
+**Where is the data from? Check out this amazing webscraper: https://github.com/silvandario/hsgscraper** <- all PDFs were retrieved automatically. The faq-data is directly from the SHSG app and was collected with **Scrapethings (https://scrapethings.com)**.
 
 ## 🌟 Key Features
 
