@@ -14,7 +14,7 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Bidding Bro",
+  title: "🧑‍🎓 Buddy 🧠",
   description: "University of St. Gallen (HSG) Bidding Bot",
 };
 

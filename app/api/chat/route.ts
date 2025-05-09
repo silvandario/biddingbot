@@ -50,6 +50,7 @@ export async function POST(req: Request) {
     // Step 2: Set up query filters - look for course info first, then FAQ if needed
     const courseFilter = { "metadata.type": queryType };
     const faqFilter = { "metadata.type": "faq" };
+    const thesisFilter = { "metadata.type": "thesis" };
     
     // First try to query course information
     const collection = await db.collection(NEXT_ASTRA_DB_COLLECTION!);
@@ -77,6 +78,18 @@ export async function POST(req: Request) {
     );
     
     const faqDocuments = await faqCursor.toArray();
+
+    const thesisCursor = collection.find(
+      thesisFilter,
+      {
+        sort: {
+          $vector: embedding,
+        },
+        limit: 5,
+      }
+    );
+    
+    const thesisDocuments = await thesisCursor.toArray();
     
     // Combine results with a slight preference for FAQ entries if the user is likely asking a question
     let documents = [];
@@ -86,12 +99,10 @@ export async function POST(req: Request) {
                              /^(how|what|where|when|why|who|which|can|is|are|do|does)/i.test(latestMessage) ||
                              /^(wie|was|wo|wann|warum|wer|welche|welcher|welches|kann|ist|sind|hat|haben)/i.test(latestMessage);
     
-    if (isLikelyQuestion) {
-      // For questions, prioritize FAQ entries but include relevant course info
-      documents = [...faqDocuments, ...courseDocuments];
+      if (isLikelyQuestion) {
+      documents = [...faqDocuments, ...thesisDocuments, ...courseDocuments];
     } else {
-      // For other queries, prioritize course information but include relevant FAQs
-      documents = [...courseDocuments, ...faqDocuments];
+      documents = [...courseDocuments, ...thesisDocuments, ...faqDocuments];
     }
     
     // Limit to top 10 most relevant results overall
@@ -101,6 +112,15 @@ export async function POST(req: Request) {
       // Handle FAQ entries
       if (doc.metadata?.type === "faq") {
         return doc.text;
+      }
+      if (doc.metadata?.type === "thesis") {
+        const meta = doc.metadata || {};
+        const title = meta.title || "Untitled Thesis";
+        const student = meta.student || "Unknown Student";
+        const year = meta.year || "Year unknown";
+        const supervisor = meta.supervisor || "Unknown Supervisor";
+      
+        return `📄 Thesis: "${title}"\nAuthor: ${student}, Year: ${year}\nSupervisor: ${supervisor}\n\n${doc.text}`;
       }
       
       // Handle course entries
@@ -261,6 +281,12 @@ FOR FAQ QUESTIONS:
 - If a date is provided in the FAQ, make sure to include it in your answer
 - Be conversational but precise
 - IF AVAILABLE; ALWAYS MENTION THE [Datum] AND THE [NameAntwortgeber] FROM THE CSV and tell the user that this information is related to a similar question from the past that was answered by NameAntwortgeber.
+
+
+IF THE USER ASKS ABOUT A THESIS (e.g. author, supervisor, topic, year):
+- Provide the title, author, supervisor, and year
+- If possible, summarize the content from the full text
+- Be academic, concise, and helpful
 
 ${isGermanQuery ? 'WICHTIG: Antworte auf Deutsch, wenn die Frage auf Deutsch gestellt wurde.' : ''}
 IWI-HSG: Institut für Wirtschaftsinformatik

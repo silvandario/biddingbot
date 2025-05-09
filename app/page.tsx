@@ -101,7 +101,7 @@ export default function Home() {
         <div className="flex-1 overflow-y-auto mb-6 space-y-6 pr-1 scroll-smooth">
           {noMessages ? (
             <div className="text-center py-10">
-              <h2 className="text-2xl font-bold mb-4">Welcome to Bidding Buddy!</h2>
+              <h2 className="text-2xl font-bold mb-4">Welcome to your Buddy!</h2>
               <p className="text-gray-600 mb-6">Ask me anything about the HSG bidding system or Master programs.</p>
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 max-w-lg mx-auto">
                 {[
