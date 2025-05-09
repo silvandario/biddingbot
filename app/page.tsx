@@ -108,7 +108,7 @@ export default function Home() {
                   'How many IS/FPV credits do I need for MBI?',
                   'Tell me about From Data2Dollar - Dein Technologiekoffer von der Datenbeschaffung bis zur Visualisierung',
                   'Give me a suggestion for an FPV. I like data science.',
-                  'Tell me about the Master in Marketing Management'
+                  'How do I sign up for sport classes in the gym like zumba or pilates'
                 ].map((suggestion) => (
                   <button key={suggestion} onClick={() => useSuggestion(suggestion)} className="bg-slate-100 dark:bg-slate-700 text-sm p-3 rounded-xl hover:bg-slate-200">
                     {suggestion}
