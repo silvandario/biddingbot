@@ -105,9 +105,9 @@ export default function Home() {
               <p className="text-gray-600 mb-6">Ask me anything about the HSG bidding system or Master programs.</p>
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 max-w-lg mx-auto">
                 {[
-                  'How many IS/FPV credits do I need for MBI?',
-                  'Tell me about From Data2Dollar - Dein Technologiekoffer von der Datenbeschaffung bis zur Visualisierung',
                   'Give me a suggestion for an FPV. I like data science.',
+                  'Tell me about From Data2Dollar - Dein Technologiekoffer von der Datenbeschaffung bis zur Visualisierung',
+                  'Ich bin Dozierender und möchte einen kurzen Überblick über bisherige Abschlussarbeiten über PE.',
                   'How do I sign up for sport classes in the gym like zumba or pilates'
                 ].map((suggestion) => (
                   <button key={suggestion} onClick={() => useSuggestion(suggestion)} className="bg-slate-100 dark:bg-slate-700 text-sm p-3 rounded-xl hover:bg-slate-200">
