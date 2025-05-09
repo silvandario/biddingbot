@@ -1,7 +1,7 @@
 import { streamText } from 'ai';
 import { openai as aiSdkOpenai } from '@ai-sdk/openai';
 import { DataAPIClient } from '@datastax/astra-db-ts';
-import { information, systemPrompt } from '@/constants/const';
+import { systemPrompt } from '@/constants/const';
 import OpenAI from 'openai';
 import { embed } from 'ai';
 import { openai as oi } from '@ai-sdk/openai';
@@ -12,10 +12,10 @@ const {
   NEXT_ASTRA_DB_APPLICATION_TOKEN,
   NEXT_ASTRA_DB_NAMESPACE,
   NEXT_ASTRA_DB_COLLECTION,
-  NEXT_PUBLIC_OPENAI_API_KEY,
+  //NEXT_PUBLIC_OPENAI_API_KEY,
 } = process.env;
 
-const openai = new OpenAI({ apiKey: NEXT_PUBLIC_OPENAI_API_KEY });
+//const openai = new OpenAI({ apiKey: NEXT_PUBLIC_OPENAI_API_KEY });
 const client = new DataAPIClient(NEXT_ASTRA_DB_APPLICATION_TOKEN!);
 const db = client.db(NEXT_ASTRA_DB_API_ENDPOINT!, {
   keyspace: NEXT_ASTRA_DB_NAMESPACE!,
@@ -64,7 +64,7 @@ export async function POST(req: Request) {
       }
     );
     
-    let courseDocuments = await courseCursor.toArray();
+    const courseDocuments = await courseCursor.toArray();
     
     // Also query FAQ documents
     const faqCursor = collection.find(
@@ -108,7 +108,7 @@ export async function POST(req: Request) {
     // Limit to top 10 most relevant results overall
     documents = documents.slice(0, 10);
     
-    const docsMap = documents?.map((doc, i) => {
+    const docsMap = documents?.map((doc) => {
       // Handle FAQ entries
       if (doc.metadata?.type === "faq") {
         return doc.text;
