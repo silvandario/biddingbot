@@ -260,9 +260,89 @@ FOR FAQ QUESTIONS:
 - For SHSG (Student Union) related questions, mention that this information comes from the student representatives
 - If a date is provided in the FAQ, make sure to include it in your answer
 - Be conversational but precise
-- IF AVAILABLE; ALWAYS MENTION THE [Datum] AND THE [NameAntwortgeber] FROM THE CSV and tell the user that this information is related to a similar question from the past that was answered by NameAntwortgeber
+- IF AVAILABLE; ALWAYS MENTION THE [Datum] AND THE [NameAntwortgeber] FROM THE CSV and tell the user that this information is related to a similar question from the past that was answered by NameAntwortgeber.
 
 ${isGermanQuery ? 'WICHTIG: Antworte auf Deutsch, wenn die Frage auf Deutsch gestellt wurde.' : ''}
+IWI-HSG: Institut für Wirtschaftsinformatik
+Wenn jemand nach einem Kurs zur digitalen Transformation, Informationssystemen oder Business Development fragt – schlage entsprechende Dozierende vor. 
+
+* Prof. Dr. Andrea Back
+* Prof. Dr. Reinhard Jung
+* Prof. Dr. Jan Marco Leimeister
+* Prof. Dr. Robert Winter
+* Prof. Dr. Ivo Blohm
+* Prof. Dr. Ingrid Bauer-Hänsel
+* Prof. Dr. Thomas Grisold
+* Prof. Dr. Andreas Hein
+* Prof. Dr. Jan vom Brocke
+* Prof. Dr. Ulrike Baumöl
+* Prof. Dr. Matthias Söllner
+* Prof. Dr. Thomas Burri
+* Prof. Dr. Peter Rohner
+* Prof. Dr. Antonia Albani
+* Dr. Benjamin van Giffen
+* Dr. Jennifer Hehn
+* Lena-Marie Pätzmann
+* Maximilian Schacker
+* Mahei Li
+* Felix Köpple
+* Roman Rietsche
+* Prof. Dr. Philipp A. Ebel
+* Dr. Edona Elshan
+* Dr. Arne Grüttner
+* Dr. Kazem Haki
+* Fumi Kurihara
+* Dr. Maximilian Palmié
+
+
+
+
+ITEM-HSG: Institut für Technologiemanagement
+Wenn jemand Kurse zu Startups, digitalen Innovationen oder Produktentwicklung sucht – nenne relevante Lehrpersonen des ITEM.
+Professor/innen: 
+* Prof. Dr. Oliver Gassmann 
+* Prof. Dr. Dietmar Grichnik 
+* Prof. Dr. Felix Wortmann 
+* Prof. Dr. Elgar Fleisch 
+
+Wissenschaftliche Mitarbeitende und Projektleitende: 
+* Dr. Robert Schreiber 
+* Dr. Lukas Budde 
+* Dr. Mark Grothkopp 
+* Dr. Christian Opitz 
+* Dr. Matteo Bernasconi 
+* Dr. Daniel Wörner 
+* Dr. Jean Paul Potthoff 
+
+Doktorand:innen und weitere Mitarbeitende: 
+* Besart Kajdomqaj 
+* Sahana Sivachelvam 
+* Fabian Wüest 
+* Noah Lauffer
+* Lorenzo Pirrone 
+* Karl Gerhard Schalm 
+* Fabian Klinkner 
+* Moritz Häussler 
+* Jessica Rebecca Helbling 
+* Ronja Hermann 
+* Maximilian Uhl 
+* Simon Gese 
+* Odile-Florence Giger 
+* Wasu Mekniran 
+* Panitda Huynh 
+* Victoria Brügger
+* Sebastian Otto
+* Johanna Knapp 
+* Maximilian May
+* Manuel Wlcek
+* Vincent Paffrath 
+* David Wagner 
+* Mario Sebastian Mühlematter 
+* Selina Lorenz 
+* Uliana Schmück 
+* Ugne Potthoff 
+* Robin Deuber 
+* Philip Rodak 
 `
 ,
     };
